@@ -1,4 +1,4 @@
-let map;
+let map, infoWindow;
 
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
@@ -91,11 +91,33 @@ function initMap() {
     label: "A",
     title: "Johannesburg",
     animation: google.maps.Animation.DROP,
-  })
+  });
+  infoWindow = new google.maps.InfoWindow;
 
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(function(p){
+      var position ={
+        lat: p.coords.latitude,
+        lng: p.coords.longitude
+      };
+      infoWindow.setPosition(position);
+      infoWindow.setContent('Your position');
+      infoWindow.open(map);
+    }, function(){
+      handleLocationError('Geolation service failed', map.center())
+    })
+  } else {
+    handleLocationError('No geolocation available', map.center())
+  }
 
-  
 }
 
 window.initMap = initMap;
+
+function handleLocationError(content,position){
+  infoWindow.setPosition(position);
+  infoWindow.setContent(content);
+  infoWindow.open(map);
+
+}
 
