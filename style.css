@@ -1,0 +1,27 @@
+/* 
+ * Always set the map height explicitly to define the size of the div element
+ * that contains the map. 
+ */
+ #map {
+  height: 80%;
+  width: 80%;
+  margin: auto;
+}
+
+/* 
+ * Optional: Makes the sample page fill the window. 
+ */
+html,
+body {
+  height: 100vw;
+  height: 100vh;
+  background: url(colorful-2174045_640.png);
+  background-size: cover; 
+}
+
+h1 {
+  font-family: 'Kaushan Script', cursive;
+  text-align: center;
+  color: aliceblue;
+
+}
