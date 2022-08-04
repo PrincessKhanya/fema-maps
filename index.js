@@ -93,6 +93,7 @@ function initMap() {
     title: "Johannesburg",
     animation: google.maps.Animation.DROP,
   });
+
   infoWindow = new google.maps.InfoWindow;
 
   if(navigator.geolocation){
@@ -114,11 +115,13 @@ function initMap() {
   var input = document.getElementById("search");
   var searchBox = new google.maps.places.SearchBox(input);
 
+  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
   map.addListener('bounds_changed', function(){
     searchBox.setBounds(map.getBounds());
   });
 
-  var marker = [];
+  var markers = [];
   searchBox.addListener('places_changed', function(){
     var places = searchBox.getPlaces();
 
@@ -126,21 +129,19 @@ function initMap() {
       return;
     }
 
-    markers.forEach(function(m) {m.setMap(null);});
+    markers.forEach((m) => {m.setMap(null);});
     markers = [];  
 
     var bounds = new google.maps.LatLngBounds();
 
-    places.forEach(function (p){
-      if (!p.geometry){
+    places.forEach((p)=>{
+      if (!p.geometry || !p.geometry.location){
         return;
       }
       markers.push(new google.maps.Marker({
         map: map,
         title: p.name,
-        position: p.geometry.location,
-        label: "A",
-        animation: google.maps.Animation.DROP
+        position: p.geometry.location
       }));
       if(p.geometry.viewport){
         bounds.union(p.geometry.viewport);
@@ -150,6 +151,27 @@ function initMap() {
     });
     map.fitBounds(bounds);
   });
+  // let autocomplete;
+  // function initAutocomplete(){
+  //   autocomplete =  new google.maps.places.Autocomplete(
+  //     document.getElementById('search'), {
+  //       types: ['establishment'],
+  //       componentRestrictions: {'country': ['ZA']},
+  //       fields: ['place_id', 'geometry', 'name']
+
+  //     }
+  //   );
+  //   autocomplete.addListner('place_changed', onPlaceChanged);
+  // }
+  // function onPlaceChanged(){
+  //   var place = autocomplete.getPlace();
+  //   if(!place.geometry){
+  //     document.getElementById('autocomplete').placeholder = 'Enter a place'
+
+  //   }else{
+  //     document.getElementById('details').innerHTML = place.name
+  //   }
+  // }
 
 }
 
@@ -163,4 +185,5 @@ function handleLocationError(content,position){
   infoWindow.open(map);
 
 }
+
 
